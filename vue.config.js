@@ -1,0 +1,24 @@
+module.exports={
+    configureWebpack:{
+        resolve:{
+            extensions:['.js','.css','.vue'],
+            alias:{
+               'assets':'@/assets',
+               'components':'@/components',
+               'network':'@/network',
+               'router':'@/router',
+               'store':'@/store',
+               'views':'@/views',
+
+            }
+        }
+    },
+    devServer:{
+        proxy:{
+            '/api':{
+                target:'https://cnodejs.org/api/v1',
+                changeOrigin:true,
+            }
+        }
+    }
+}
