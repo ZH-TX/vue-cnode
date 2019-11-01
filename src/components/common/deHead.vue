@@ -1,32 +1,14 @@
 <template>
     <div>
         <div class="page">
-            <div class="tab-nav" v-show="isShow">
-                <div class="back" @click="goback"> 返回>>>></div>
-                <router-link class="login" tag="div" to="/login">登录</router-link> 
-                <div class="tab-nav-item" data-tab="all"  data-name="全部" @click="tabTo">
-                    全部
-                </div>
-                <div class="tab-nav-item" data-tab="good" data-name="精华" @click="tabTo">
-                    精华
-                </div>
-                <div class="tab-nav-item " data-tab="share" data-name="分享" @click="tabTo">
-                    分享
-                </div>
-                <div class="tab-nav-item" data-tab="ask" data-name="问答" @click="tabTo">
-                    问答
-                </div>
-                <div class="tab-nav-item " data-tab="job" data-name="招聘" @click="tabTo">
-                    招聘
-                </div>
-            </div>
-            <div @click="changeBar">菜单</div>
             <div>
-                {{tabName}}
-                
+                <img src="" alt="">
+            </div>
+            <div>
+                详情页
             </div>
             <div >
-                <router-link tag="div" to="/login">登录</router-link>
+                <slot></slot>
             </div>
         </div>
     </div>

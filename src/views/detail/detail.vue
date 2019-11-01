@@ -1,20 +1,20 @@
 <template>
     <div>
-       
+        <headers/>
         <div class="container" >
-             <headers/>
+            
             <div class="title">
                 <span>{{article.title}}</span>
             </div>
             <div class="info">
-                <img class="author-face"  :src="article.author.avatar_url"/>
+                <img class="author-face"  v-lazy="article.author.avatar_url"/>
                 
                 <div class="text">
                     <span>作者：{{article.author.loginname}}</span>
                     <span>发布于：{{article.create_at}}</span>
                     <span>浏览次数：{{article.visit_count}}</span>
                     <span>最后一次编辑：{{article.last_reply_at}}</span>
-                    <span class="article.tab">来自：{{article.tabspan}}</span>
+                    <!-- <span class="article.tab">来自：{{article.tabspan}}</span> -->
                 </div>
                 <div class="mark" v-if="article.mark">{{article.mark}}</div>
             </div>
@@ -29,18 +29,21 @@
                         <div class="reply-first">
                             <img class="reply-author-face"  :src="reply.author.avatar_url" />
                             <div class="reply-info">
-                                <span class="reply-name">{{reply.author.loginname}}</span>
-                                <span class="reply-time">{{reply.create_at}}</span>
+                                <div class="reply-name">{{reply.author.loginname}}</div>
+                                <div class="reply-time">{{reply.create_at}}</div>
                             </div>
                         </div>
-                        <div class="reply-two">
+                        <div class="reply-two ">
                             <span class="reply-content markdown-body" v-html="reply.content">{{reply.content}}</span>
                         </div>                    
                     </div>
                 </div>
             </div>
-            <loading />
-            <backtop  />
+            <loading  v-if="isLoadShow" />
+            <transition name="fade">
+              <backtop @click.native="backTop"  v-show="isShow"/>
+            </transition>
+            
         </div>
         
     </div>
@@ -61,27 +64,75 @@
         components: {headers,loading,backtop},
         data() {
             return {
-                article: [],
+                isShow:false,
+                isLoadShow:true,
+                scrollTop:0,
+                article: {
+                  author:{},  //不加这个初始时会报错
+                  replies:[]
+                },
+                
+              
             }
         },
-        created () {
+        mounted () {
+            window.addEventListener('scroll', this.getScroll);
             this.getData();
+            setTimeout(()=>{
+                this.isLoadShow=false
+            },1500)
+        },
+        destroyed(){
+            window.removeEventListener('scroll', this.getScroll);
         },
         methods: {
             getData() {
                 let topicId=this.$route.params.id
                 getDetailData(topicId,res=>{
                     this.article=res.data
-                    console.log(this.article)
-                    this.article.map( topic =>{
-                        topic.create_at = util.formatTime(new Date(topic.create_at));
-                        const last_reply_at = +new Date(topic.last_reply_at);
-                        topic.last_reply_at = !last_reply_at ? topic.last_reply_at : util.getDateDiff(last_reply_at);
-                        return topic
+                    // console.log(this)
+                    
+                    this.article.create_at = util.formatTime(new Date(this.article.create_at));
+                    const last_reply_at = new Date(this.article.last_reply_at);
+                    this.article.last_reply_at = !last_reply_at ? this.article.last_reply_at : util.getDateDiff(last_reply_at);
+                    
+                    this.article.replies.map((topic)=>{
+                        topic.create_at = util.getDateDiff(new Date(topic.create_at));
+                        // const last_reply_at = +new Date(topic.last_reply_at);
+                        // topic.last_reply_at = !last_reply_at ? topic.last_reply_at : util.getDateDiff(last_reply_at);
                     })
+                    
+                    return this.article
+                   
                 
                 })
                 
+            },
+            getScroll(){
+                this.scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+                // console.log(document.documentElement.scrollTop);
+                
+                this.isShow=this.scrollTop>500
+                
+            },
+            
+            backTop(e){
+              // console.log(e,this);
+              let timer
+              timer = setInterval(function(){
+                let scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+                let ispeed = Math.floor(-scrollTop / 5);
+                document.documentElement.scrollTop = document.body.scrollTop = scrollTop + ispeed;
+                
+                if(scrollTop == 0){
+                  clearInterval(timer)
+          
+                }
+              },30)
+            
+              // document.body.scrollTop = 0
+              // document.documentElement.scrollTop = 0
+              
             }
         },
     }
@@ -99,37 +150,37 @@
   font-weight: bold;
 }
 .info{
-  padding: 15px 0 10px 100px;
-  /* width: 100%; */
-  border-bottom: 1px solid #cccccc;
-  overflow: hidden;
-  position: relative;
+    display: flex;
+    border-bottom: 1px solid #cccccc;
+    padding: 10px ;
+  
 }
 .reply-first{
   display: flex;
   padding: 10px 5px;
-
+ 
 }
 /* .reply-first image{
   padding: 0 20px;
   border-radius: 20px;
 } */
 .reply-two{
-  padding: 10px 5px;
+  height: auto;
 
 }
 .reply-info{
     flex: 1;
 }
 .author-face{
-  float: left;
+
   height: 70px;
   width: 70px;
   border-radius: 35px;
-  margin-left: -50px;
+
 }
-.text text{
+.text span{
   display: block;
+  padding-left: 15px;
   padding-top: 6px;
   font-size: 14px;
 }
@@ -184,24 +235,23 @@
   /* display: inline-block;
   width: 68%; */
 }
-/* .reply-name::after{
-  content: "";
-  height: 4px;
-  width: 4px;
-  display: inline-block;
-  border-radius: 2px;
-  background: #00b4ff;
-  margin: 0 6px 0 4px;
-  position: relative;
-  top: -2px;
-} */
+.reply-time{
+    color: #acafb1
+
+}
 .reply-content{
   /* border: 0; */
   font-size: 100%;
   /* vertical-align: baseline; */
   margin: 0;
-  padding: 5px 10px;
+  padding: 5px ;
 
+}
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 2s;
+}
+.fade-enter, .fade-leave-to  {
+  opacity: 0;
 }
 
 </style>

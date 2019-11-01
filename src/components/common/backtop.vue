@@ -1,12 +1,23 @@
 <template>
     <div>
-        <div class="to-top" bindtap="" >回到顶部</div>
+        <div class="to-top" @click="backtop" >回到顶部</div>
+        
     </div>
 </template>
 
 <script>
     export default {
-        
+        // props:{
+        //     backtop:{
+        //         type:Function,
+        //         required:true
+        //     }
+        // },
+        methods: {
+            backtop() {
+                this.$emit('backtop')
+            }
+        },
     }
 </script>
 
@@ -27,5 +38,6 @@
     border-right: 0;
 
 }
+
 
 </style>

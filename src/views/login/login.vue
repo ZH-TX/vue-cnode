@@ -20,7 +20,9 @@
         name:'login',
         components: {headers,},
         data() {
-            
+            return{
+              
+            }
         },
         methods: {
             name() {

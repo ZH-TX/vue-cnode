@@ -1,64 +1,78 @@
 <template>
     <div> 
         
-        <!-- index.wxml -->
+        
         <div class="container">
             <!-- 头部 -->
             <headers @my-event='changebar' />
 
             <loading v-show="isLoadShow" />
-
+           
             <!-- 主体部分 -->
-            <div class="scroll-content">
-                <div>
-                <!-- 进入刷新 -->
-                <div v-show="isRefresh">
-                    <loading />
-                </div>
-                <!-- 主体内容 -->
-                <div v-for="topic in homeData" :key="topic.index">
-                    <router-link tag="div" :to="'/detail/'+topic.id" class="topic-item" >
-                        <!-- 判断类型 -->
-                        <div class="topic-h"  data-id="topic.id">
-                            
-                            <span class="topic-type top" v-if="topic.top === true">置顶</span>
-                            <span class="topic-type jh" v-if="topic.good === true">精华</span>
-                             <span class="topic-type ask" v-if="topic.tab === 'ask'">问答</span>
-                            <span class="topic-type share" v-if="topic.tab === 'share'">分享</span>
-                            <span class="topic-type job" v-if="topic.tab === 'job'">招聘</span>
-                            {{topic.title}}
-                            <!-- <span class="topic-title" :tap="divDetail" data-id="{{topic.id}}">
-                            {{topic.title}}
-                            </span> -->
-                        </div>
-                        <div class="topic-more"  data-id="topic.id" >
-                            <img class="author-face" :src="topic.author.avatar_url"/>
-                            <div class="span">
-                                <span>{{topic.author.loginname}}</span>
-                                <div class="topic-re-vi fr">
-                                    <span class="re">{{topic.reply_count}}</span>/{{topic.visit_count}}
-                                    
+            <Bscroll class="content"
+                ref="scroll"
+                @scroll="contentScroll"
+                @pullingDown="refresh"
+                @pullingUp="loadMore"
+                :data="showData"
+                :pull-up-load="true"
+                :probe-type="3">
+                <div class="scroll-content">
+                    <div>
+                    <!-- 进入刷新 -->
+                    <div class="refresh-font" v-show="isRefresh">
+                        加载中...
+                    </div>
+                    <!-- 主体内容 -->
+                    <div v-for="topic in homeData" :key="topic.index">
+                        <router-link tag="div" :to="'/detail/'+topic.id" class="topic-item" >
+                            <!-- 判断类型 -->
+                            <div class="topic-h"  data-id="topic.id">
+                                
+                                <span class="topic-type top" v-if="topic.top === true">置顶</span>
+                                <span class="topic-type jh" v-if="topic.good === true">精华</span>
+                                <span class="topic-type ask" v-if="topic.tab === 'ask'">问答</span>
+                                <span class="topic-type share" v-if="topic.tab === 'share'">分享</span>
+                                <span class="topic-type job" v-if="topic.tab === 'job'">招聘</span>
+                                {{topic.title}}
+                                <!-- <span class="topic-title" :tap="divDetail" data-id="{{topic.id}}">
+                                {{topic.title}}
+                                </span> -->
+                            </div>
+                            <div class="topic-more"  data-id="topic.id" >
+                                <img class="author-face" :src="topic.author.avatar_url"/>
+                                <div class="span">
+                                    <span>{{topic.author.loginname}}</span>
+                                    <div class="topic-re-vi fr">
+                                        <span class="re">{{topic.reply_count}}</span>/{{topic.visit_count}}
+                                        
+                                    </div>
+                                </div>
+                                <div class="span">
+                                    <span class="time">时间：{{topic.create_at}} ,</span>
+                                    <span class="fr"> {{topic.last_reply_at}}</span>
                                 </div>
                             </div>
-                            <div class="span">
-                                <span class="time">时间：{{topic.create_at}} ,</span>
-                                <span class="fr"> {{topic.last_reply_at}}</span>
-                            </div>
-                        </div>
-                    </router-link>
+                        </router-link>
 
-                    <!-- <router-view></router-view> -->
+                        <!-- <router-view></router-view> -->
+                    </div>
+                    <!-- 加载 -->
+                    <div class="refresh-font">
+                        <span v-show="isLoadMore">正在加载更多数据...</span>
+                    </div>
+                    
+                    </div>
                 </div>
-                <!-- 加载 -->
-                <div class="">
-                    <span v-if="isLoadMore">正在加载更多数据...</span>
-                </div>
-                
-                </div>
-            </div>
+            </Bscroll>
             <!-- 回到顶部 -->   
         </div>
-        <backtop  />
+        <transition name="fade">
+            <backtop @backtop="backTop" v-show="showBackTop" />
+        </transition>
+        
+        
+       
        <!-- <button @click="test">点击我有惊喜</button> -->
     </div>
 </template>
@@ -68,6 +82,7 @@
     import headers from 'components/common/headers';
     import loading from 'components/common/loading.vue';
     import backtop from 'components/common/backtop.vue';
+    import Bscroll  from 'components/common/bscroll'
 
     import {getHomeData,getDetailData} from 'network/home.js'
 
@@ -76,13 +91,13 @@
 
     export default {
         name:'home',
-        components:{headers,loading,backtop},
+        components:{headers,loading,backtop,Bscroll},
         data(){ 
             return{
                 page: 1,
                 tab: 'all',
                 homeData: [],
-             
+                showBackTop:false,
                 isLoadShow:true,
                 isRefresh:false,
                 isLoadMore:false
@@ -91,20 +106,40 @@
 
         },
         created () {
+            // console.log("xuexi");
+            
             this.getData()
             setTimeout(()=>{
                 this.isLoadShow=false
             },1500)
             
         },
+        mounted() {
+            // console.log('hhh');
+            
+        },
+        updated () {
+            
+        },
+        computed: {
+            showData() {
+                return this.homeData
+            }
+        },
         methods: {
-            getData(){
+
+            refresh(){
+                this.isRefresh=true
+                this.getData()
+            },
+           
+            getData(page){
                 getHomeData({
-                    page:this.page,
+                    page:page,
                     tab:this.tab
                 },res=>{
                     // console.log(res);
-                    this.homeData=res.data
+                    this.homeData=this.isLoadMore?this.homeData.concat(res.data):res.data
                     // console.log(this.homeData)
 
                     // 处理数据,时间 
@@ -118,11 +153,32 @@
                         return topic;
                     })
                     // console.log(this.homeData)
-                    
+                    this.isRefresh=false
+                    this.isLoadMore=false
+                   
                 })
                 
             },
-            
+            contentScroll(e) {
+		        
+                // 2.决定backTop是否显示
+                // console.log(e);
+                
+                this.showBackTop = e.y < -500
+            },
+            // 只会执行一次???
+            loadMore() {
+                console.log('hhhh');
+                
+                this.isLoadMore=true
+                this.page+=1
+                console.log(this.page);
+                this.getData(this.page)
+            },
+            // 回到顶部,在300毫秒之类;
+            backTop() {
+                this.$refs.scroll.scrollTo(0, 0, 300)
+            },
             test(e){
                 console.log(e);
             },
@@ -146,14 +202,23 @@
     align-items: center;
     justify-content: space-between;
     padding: 100px 0;
+    // background: rgba(0, 0, 0.8);
     box-sizing: border-box;
 } 
-.scroll-content {
+.content {
+    /* 利用定位来达到内容全部塞满/也可以使用calc()计算属性来达到相同的效果 */
     position: absolute;
-    top: 36px;
-    bottom: 0;
-    width: 100%;
-}
+    top: 44px;
+    bottom: 49px;
+    left: 0;
+    right: 0;
+  }
+// .scroll-content {
+//     position: absolute;
+//     top: 36px;
+//     bottom: 0;
+//     width: 100%;
+// }
 
 .tab-nav-item {
     display: inline-block;
@@ -174,13 +239,18 @@
     bottom: -3px;
     background: #80bd01;
 }
-
+.refresh-font{
+    text-align: center;
+    background: rgb(235, 231, 231);
+}
 
 .is-refresh {
     padding-top: 10px;
 
 }
-
+.topic-item:nth-child(1){
+    border-top: 1px solid rgb(201, 200, 200);
+}
 
 .topic-item {
     padding: 15px 10px;
@@ -263,6 +333,12 @@
 }
 .re {
     color: green;
+}
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 2s;
+}
+.fade-enter, .fade-leave-to  {
+  opacity: 0;
 }
 
 </style>
