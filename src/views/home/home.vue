@@ -71,7 +71,7 @@
             <backtop @backtop="backTop" v-show="showBackTop" />
         </transition>
         
-        
+        <footers></footers>
        
        <!-- <button @click="test">点击我有惊喜</button> -->
     </div>
@@ -79,11 +79,11 @@
 
 <script>
 
-    import headers from 'components/common/headers';
+    import headers from 'components/common/headers.vue';
     import loading from 'components/common/loading.vue';
     import backtop from 'components/common/backtop.vue';
-    import Bscroll  from 'components/common/bscroll'
-
+    import Bscroll from 'components/common/bscroll.vue'
+    import footers from 'components/common/footer.vue';
     import {getHomeData,getDetailData} from 'network/home.js'
 
     const util=require('assets/js/util.js')
@@ -91,7 +91,7 @@
 
     export default {
         name:'home',
-        components:{headers,loading,backtop,Bscroll},
+        components:{headers,loading,backtop,Bscroll,footers},
         data(){ 
             return{
                 page: 1,

@@ -13,6 +13,7 @@
 
 
 <style lang="scss">
+@import 'assets/font/iconfont.css';
 @import 'assets/css/init.scss';
 @import 'assets/css/github-markdown.css';
 

@@ -1,6 +1,17 @@
 <template>
     <div>
-        <headers/>
+        <!-- <headers/> -->
+        <v-header title="详情页">
+          <router-link :to="{ name: 'message' }" class="item-list">
+            <div class="icon" flex="cross:center">
+              <i class="iconfont icon-msg" style="color: #bd1616;"></i>
+            </div>
+            <div class="text">我的消息</div>
+            <div class="arrow">
+              <i class="iconfont icon-arrow-right"></i>
+            </div>
+          </router-link>
+        </v-header>
         <div class="container" >
             
             <div class="title">
@@ -20,7 +31,7 @@
             </div>
             <div class="content">
                 <div class="markdown-body" v-html="article.content">{{article.content}}</div>
-                <!-- <template is="entry" data="{{...article.content}}"/>  -->
+                
             </div>
             <div class="reply" v-if="article.replies.length > 0">
                 <div  v-for="reply in article.replies" :key="reply.index" >
@@ -51,6 +62,7 @@
 
 <script>
     import headers from 'components/common/headers'
+    import VHeader from 'components/common/VHead'
     import loading from 'components/common/loading.vue';
     import backtop from 'components/common/backtop.vue';
 
@@ -61,7 +73,7 @@
 
     export default {
         name:'detail',
-        components: {headers,loading,backtop},
+        components: {VHeader,loading,backtop},
         data() {
             return {
                 isShow:false,
