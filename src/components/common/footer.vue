@@ -16,13 +16,10 @@
 
 
 <script>
-    //   import { mapModules, mapRules } from 'vuet'
+
 
     export default {
-        // mixins: [
-        //   mapModules({ user: 'user-self', count: 'user-messages-count' }),
-        //   mapRules({ need: 'user-messages-count' })
-        // ],
+     
         data() {
             return {
                 list: [{

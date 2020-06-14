@@ -25,6 +25,29 @@ import axios from './axios.js'
         }).then(callback)
 
     }
+    // 用户信息
+    function getUserData(loginname,callback){
+        return axios({
+            url:'/topic/'+loginname,
+           
+        }).then(callback)
+
+    }
+    
+    // 主题收藏
+    function getTopicDetailData(opt,callback){
+        return axios({
+            method:'post',
+            url:'/topic_collect/collect',//de_collect
+            params:{
+                topic_id:opt.id||'',
+                accesstoken:opt.accesstoken|| ''
+            }
+           
+        }).then(callback)
+
+    }
+
 
 
 

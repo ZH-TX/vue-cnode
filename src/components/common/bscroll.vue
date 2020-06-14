@@ -1,8 +1,8 @@
 <template>
-  <!-- ref 相当于id的标志符 -->
-  <div ref="wrapper">
-    <slot></slot>
-  </div>
+    <!-- ref 相当于id的标志符 -->
+    <div ref="wrapper">
+        <slot></slot>
+    </div>
 </template>
 
 <script>
@@ -88,8 +88,8 @@
         // 防止刷新过快,进行防抖;
         watch: {
             data() {
-            setTimeout(this.refresh, 20)
-        }
+                setTimeout(this.refresh, 20)
+            }
         }
 	}
 </script>

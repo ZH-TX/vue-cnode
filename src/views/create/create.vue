@@ -2,7 +2,7 @@
 	<div>
 		<v-header title="发表"></v-header>
 
-		<form flex="dir:top" @submit.prevent="form.create()">
+		<form  @submit.prevent="create">
 			<div class="title">
 				<input type="text" placeholder="标题...">
 			</div>
@@ -15,8 +15,8 @@
 					<option value="dev">开发</option>
 				</select>
 			</div>
-			<div class="con" flex="dir:top" flex-box="1">
-				<textarea flex-box="1" placeholder="内容..."></textarea>
+			<div class="con"  >
+				<textarea  placeholder="内容..."></textarea>
 			</div>
 		</form>
 		<footers></footers>
@@ -34,7 +34,12 @@
 		},
 		data() {
 			return {
-
+				
+			}
+		},
+		methods: {
+			create(){
+					
 			}
 		},
 
