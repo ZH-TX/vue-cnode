@@ -28,10 +28,11 @@
     bottom: 15%;
     right: 0;
     width: 25px;
-    color: gray;
-    padding: 10px 5px 10px 8px;
+    color: #fff;
+    padding: 5px;
     text-align: center;
     z-index: 20;
+    font-size: 12px;
     border-radius: 20px 0 0 20px;
     background-color: #42b983;
     border: 1px solid #ccc;

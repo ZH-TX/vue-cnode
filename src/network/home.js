@@ -1,6 +1,8 @@
 import axios from './axios.js'
 
 
+//感觉还是直接在页面中调用比较好
+
 
     function getHomeData (options,callback){
         return axios({

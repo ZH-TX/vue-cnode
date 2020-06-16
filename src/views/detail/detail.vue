@@ -1,14 +1,7 @@
 <template>
 	<div>
 		<!-- <headers/> -->
-		<v-header title="详情页">
-			<router-link :to="{ name: 'home' }" slot="left">
-				<div class="icon">
-					<i class="iconfont icon-back" style="color: #222;"></i>
-				</div>
-
-			</router-link>
-		</v-header>
+		<goback title="详情页"/>
 		<div class="container">
 
 			<div class="title">
@@ -18,7 +11,7 @@
 				<img class="author-face" v-lazy="article.author.avatar_url" />
 
 				<div class="text">
-					<span>作者：{{article.author.loginname}}</span>
+					<span style="color:#4078c0" @click="handleDetail(article.author.loginname)">作者：{{article.author.loginname}}</span>
 					<span>发布于：{{article.create_at}}</span>
 					<span>浏览次数：{{article.visit_count}}</span>
 					<span>最后一次编辑：{{article.last_reply_at}}</span>
@@ -37,7 +30,7 @@
 						<div class="reply-first">
 							<img class="reply-author-face" :src="reply.author.avatar_url" />
 							<div class="reply-info">
-								<div class="reply-name">{{reply.author.loginname}}</div>
+								<div class="reply-name" @click="handleDetail(reply.author.loginname)">{{reply.author.loginname}}</div>
 								<div class="reply-time">{{reply.create_at}}</div>
 							</div>
 						</div>
@@ -62,7 +55,7 @@
 	import VHeader from 'components/common/VHead'
 	import loading from 'components/common/loading.vue';
 	import backtop from 'components/common/backtop.vue';
-
+	import goback from  'components/content/goback.vue'
 	import {
 		getHomeData,
 		getDetailData
@@ -76,6 +69,7 @@
 		components: {
 			VHeader,
 			loading,
+			goback,
 			backtop
 		},
 		data() {
@@ -102,6 +96,12 @@
 			window.removeEventListener('scroll', this.getScroll);
 		},
 		methods: {
+			handleDetail(e){
+				// console.log(e,this.$route);
+				
+				this.$router.push({path:'/namedetail',query:{id:e}})
+			},
+
 			getData() {
 				let topicId = this.$route.params.id
 				getDetailData(topicId, res => {

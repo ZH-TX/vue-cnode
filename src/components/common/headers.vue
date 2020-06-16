@@ -1,23 +1,21 @@
 <template>
     <div>
-        <div class="page">
+        <div class="page" @touchmove.prevent @onScoll.prevent>
             <div class="tab-nav" v-show="isShow">
-                <div class="back" @click="goback"> 返回>>>></div>
-                <router-link class="login" tag="div" to="/login">登录</router-link> 
-                <div class="tab-nav-item" data-tab="all"  data-name="全部" @click="tabTo">
-                    全部
-                </div>
-                <div class="tab-nav-item" data-tab="good" data-name="精华" @click="tabTo">
-                    精华
-                </div>
-                <div class="tab-nav-item " data-tab="share" data-name="分享" @click="tabTo">
-                    分享
-                </div>
-                <div class="tab-nav-item" data-tab="ask" data-name="问答" @click="tabTo">
-                    问答
-                </div>
-                <div class="tab-nav-item " data-tab="job" data-name="招聘" @click="tabTo">
-                    招聘
+                <div class="tab-content">
+                    <!-- <div class="back" @click="goback"> 返回>>>></div> -->
+                    <router-link class="login" tag="div" to="/login">登录</router-link>
+                    
+                    <div class="tab-nav-item"
+                        :class="currentIndex === index ? 'active' : ''"  
+                        v-for="(item,index) in list" 
+                        :key="item.tab"
+                        :data-index="index"
+                        :data-tab="item.tab"  
+                        :data-name="item.name" 
+                        @click="tabTo">
+                        {{item.name}}
+                    </div>
                 </div>
             </div>
             <div @click="changeBar">菜单</div>
@@ -38,7 +36,15 @@
         data() {
             return {
                 isShow: false,
-                tabName:'全部'
+                tabName:'全部',
+                currentIndex: 0,
+                list:[
+                    {name:'全部',tab:'all'},
+                    {name:'精华',tab:'good'},
+                    {name:'分享',tab:'share'},
+                    {name:'问答',tab:'ask'},
+                    {name:'招聘',tab:'job'}
+                ]
             }
         },
         methods: {
@@ -46,8 +52,8 @@
             // let that = this;
             // console.log(this);
             // console.log(e.target.dataset);
-            // console.log(e.currentTarget.dataset.tab);
-
+            // console.log(e.currentTarget.dataset.index);
+            this.currentIndex = +e.currentTarget.dataset.index;
             let tab = e.currentTarget.dataset.tab
             let name=e.currentTarget.dataset.name
             this.isShow= !this.isShow,
@@ -94,7 +100,8 @@
     top: 0;
     left:0;
     right: 0;
-    padding: 0 40px;
+    padding: 0 20px;
+    overflow: hidden;
 }
 .back{
     position: absolute;
@@ -112,20 +119,24 @@
     position: fixed; 
     top: 0;
     left: 0;
-    bottom: 0;
-    background: rgb(117, 103, 103);
-    margin-top: 44px ;
-    width: 70%;
-    border-top: 1px solid #d4d4d4;
-    background: rgba(46, 44, 44, 0.8);
-    color: #dbdada;
-    transition: all .3s ease;
-    display: flex;
-    flex-flow: column nowrap;
-    align-items: center;
-    // justify-content: center;
-   
-
+	bottom: 0;
+	background: rgb(117, 103, 103);
+	margin-top: 44px;
+	width: 100%;
+	border-top: 1px solid #d4d4d4;
+	background: rgba(46, 44, 44, 0.8);
+	color: #dbdada;
+	transition: all 0.3s ease;
+}
+.tab-content {
+	width: 70%;
+	height: 100%;
+	color: #000000;
+	background: #7a7e83;
+	display: flex;
+	flex-flow: column nowrap;
+	align-items: center;
+	/* justify-content: center; */
 }
 .tab-nav-item{
     font-size: 14px;
@@ -138,7 +149,9 @@
 
 }
 
-
+.active {
+	color: #80bd01;
+}
 
 
 </style>

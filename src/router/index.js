@@ -9,6 +9,7 @@ const Myself=()=>import('views/myself/myself')
 const Detail=()=>import('views/detail/detail')
 const Login=()=>import('views/login/login')
 const About=()=>import('views/about/about')
+const UDetail=()=>import('views/detail/nameDetail')
 
 Vue.use(VueRouter)
 
@@ -37,7 +38,15 @@ const routes = [
   {
     path: '/detail/:id',
     name: 'detail',
-    component: Detail
+    component: Detail,
+    children:[  ]
+  },
+  {
+    
+      path:'/namedetail',
+      name:'namedetail',
+      component:UDetail
+    
   },
   {
     path: '/login',
@@ -49,6 +58,7 @@ const routes = [
     name: 'about',
     component: About
   },
+
 ]
 
 const router = new VueRouter({

@@ -3,16 +3,21 @@
 		<v-header title="个人中心">
 		</v-header>
 
-		<router-link v-if="self.avatar_url" :to="{ name: 'user-detail', params: { username: self.loginname } }">
-			<div class="user"></div>
-			<div class="headimg" :style="{backgroundImage: 'url(' + self.avatar_url + ')'}"></div>
-			<div class="user-name">{{ self.loginname }}</div>
+		<router-link  :to="{ name: 'login'}">
+			<div v-if="self">
+				<div class="user"></div>
+				<div class="headimg" :style="{backgroundImage: 'url(' + self.avatar_url + ')'}"></div>
+				<div class="user-name">{{ self.loginname }}</div>
+			</div>
+			<div v-else>
+				<div class="user"></div>
+				<div class="headimg"></div>
+				<div class="user-name">你还未登录，请先登录！</div>
+			</div>
+			
 		</router-link>
-		<router-link v-if="!self.avatar_url" :to="{ name: 'login' }">
-			<div class="user"></div>
-			<div class="headimg"></div>
-			<div class="user-name">你还未登录，请先登录！</div>
-		</router-link>
+		<!-- <router-link v-if="!self.avatar_url" :to="{ name: 'login' }">
+		</router-link> -->
 		<nav class="nav">
 			<li>
 				<router-link :to="{ name: 'create' }" class="item-list">
@@ -55,6 +60,7 @@
 		<footers></footers>
 	</div>
 </template>
+
 <script>
 	import VHeader from 'components/common/VHead'
 	import footers from 'components/common/footer'
@@ -64,10 +70,15 @@
 			VHeader,
 			footers
 		},
+		created() {
+			// console.log(JSON.parse(localStorage.getItem('user')).data);
+			
+			this.self=JSON.parse(localStorage.getItem('user'))
+		},
 		data() {
 			return {
 				self: {
-
+					
 				}
 
 			}

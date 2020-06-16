@@ -15,9 +15,15 @@ module.exports={
     },
     devServer:{
         proxy:{
-            '/api':{
+            '/a':{
                 target:'https://cnodejs.org/api/v1',
+                secure: true,
                 changeOrigin:true,
+                // pathRewrite:{
+                //     '^/api':'/api'
+                // }
+                
+                
             }
         }
     }

@@ -1,12 +1,18 @@
 <template>
 	<header class="header">
-		<slot name="left">
-			<div class="item"></div>
-		</slot>
+		<div class="lf-icon">
+			<slot  name="left">
+				<div class="item"></div>
+			</slot>
+		</div>
+		
 		<h2 class="title">{{ title }}</h2>
-		<slot name="right">
-			<div class="item"></div>
-		</slot>
+		<div class="lf-icon">
+			<slot name="right">
+				<div class="item"></div>
+			</slot>
+		</div>
+		
 	</header>
 </template>
 <script>
@@ -20,18 +26,24 @@
 	}
 </script>
 <style lang="scss" scoped>
+
+	.lf-icon{
+		padding: 0 10px;
+	}
 	.header {
-		position: absolute;
+		position: fixed;
 		right: 0;
 		left: 0;
-		z-index: 10500;
+		z-index: 99;
 		height: 49px;
 		line-height: 49px;
+		background: rgb(246, 246, 246);
 		border-bottom: 1px solid #ddd;
 		display: flex;
 		justify-content: space-between;
 
 		.item {
+		
 			// width: 50px;
 		}
 
