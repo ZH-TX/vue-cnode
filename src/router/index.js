@@ -10,6 +10,7 @@ const Detail=()=>import('views/detail/detail')
 const Login=()=>import('views/login/login')
 const About=()=>import('views/about/about')
 const UDetail=()=>import('views/detail/nameDetail')
+const notFound=()=>import('views/404.vue')
 
 Vue.use(VueRouter)
 
@@ -58,6 +59,15 @@ const routes = [
     name: 'about',
     component: About
   },
+  {
+    path:'/404',
+    name:'not found',
+    component:notFound
+  },
+  {
+    path:'*',
+    redirect:'/404'
+  }
 
 ]
 

@@ -177,7 +177,7 @@
             },
             // 回到顶部,在300毫秒之类;
             backTop() {
-                this.$refs.scroll.scrollTo(0, 0, 300)
+                this.$refs.scroll.scrollTo(0, 0, 500)
             },
             test(e){
                 console.log(e);

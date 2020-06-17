@@ -54,7 +54,9 @@
 
 <script>
 	// import {getDateDiff} from '../../../static/assets/js/util.js'
-	import goback from 'components/content/goback.vue'
+    import goback from 'components/content/goback.vue'
+    import {getDateDiff}from 'assets/js/util.js'
+
     export default {
         
         components: {
@@ -69,8 +71,8 @@
 		},
 		filters:{
 			fliter(e){
-				console.log(e);
-				// return getDateDiff(new Date(e))	
+				// console.log(e);
+				return getDateDiff(new Date(e))	
 			}
 		},
         data() {
